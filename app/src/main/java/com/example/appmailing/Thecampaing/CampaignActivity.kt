@@ -164,19 +164,19 @@ class CampaignActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    finish(); true
+                     true
                 }
                 R.id.nav_stats -> {
                     startActivity(Intent(this, StatistiqueActivity::class.java))
-                    finish(); true
+                     true
                 }
                 R.id.nav_contacts -> {
                     startActivity(Intent(this, ContactsActivity::class.java))
-                    finish(); true
+                     true
                 }
                 R.id.nav_products -> {
                     startActivity(Intent(this, ProductsActivity::class.java))
-                    finish(); true
+                     true
                 }
                 else -> false
             }
