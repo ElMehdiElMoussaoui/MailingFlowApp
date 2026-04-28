@@ -1,0 +1,109 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AppMailing" parent="Theme.Material3.DayNight.NoActionBar">
+<!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+<!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/blue_primary</item>-->
+<!--        <item name="colorPrimaryDark">@color/blue_dark</item>-->
+<!--        <item name="colorAccent">@color/blue_primary</item>-->
+<!--        <item name="colorOnPrimary">@color/bg_white</item>-->
+<!--        <item name="colorSecondary">@color/blue_primary</item>-->
+<!--        <item name="android:windowBackground">@color/bg_screen</item>-->
+<!--        <item name="android:statusBarColor">@color/bg_white</item>-->
+<!--        <item name="android:windowLightStatusBar">true</item>-->
+<!--        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>-->
+<!--        <item name="shapeAppearanceSmallComponent">@style/ShapeSmall</item>-->
+<!--        <item name="shapeAppearanceMediumComponent">@style/ShapeMedium</item>-->
+    </style>
+
+    <style name="ShapeSmall" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeMedium" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <style name="Theme.AppMailing" parent="Base.Theme.AppMailing" />
+
+    <!--  ── Thème principal ─────────────────────────────────  -->
+    <style name="Theme.ContactsApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!--  Couleurs Material  -->
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="colorAccent">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/bg_white</item>
+        <item name="colorSecondary">@color/blue_primary</item>
+        <!--  Fond global  -->
+        <item name="android:windowBackground">@color/bg_screen</item>
+        <item name="android:statusBarColor">@color/bg_white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!--  TextInputLayout global  -->
+        <item name="textInputStyle">@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox</item>
+        <!--  Shape global  -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.ContactsApp.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.ContactsApp.MediumComponent</item>
+    </style>
+    <!--  ── Thème SplashScreen (si utilisé) ────────────────  -->
+    <style name="Theme.ContactsApp.Splash" parent="Theme.ContactsApp">
+        <item name="android:windowBackground">@color/bg_white</item>
+    </style>
+    <!--  ── Shapes ──────────────────────────────────────────  -->
+    <style name="ShapeAppearance.ContactsApp.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="ShapeAppearance.ContactsApp.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">14dp</item>
+    </style>
+    <!--  ── Toolbar style ──────────────────────────────────  -->
+    <style name="Widget.ContactsApp.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@color/bg_white</item>
+        <item name="android:elevation">2dp</item>
+        <item name="titleTextColor">@color/text_primary</item>
+    </style>
+    <!--  ── Chip style ──────────────────────────────────────  -->
+    <style name="Widget.ContactsApp.Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipBackgroundColor">@color/bg_chip</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="chipMinHeight">24dp</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+    <!--  ── Filter button active ────────────────────────────  -->
+    <style name="Widget.ContactsApp.FilterButton.Active" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/blue_primary</item>
+        <item name="android:textColor">@color/bg_white</item>
+        <item name="cornerRadius">18dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_height">36dp</item>
+    </style>
+    <!--  ── Filter button inactive ──────────────────────────  -->
+    <style name="Widget.ContactsApp.FilterButton.Inactive" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/grey_light</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="cornerRadius">18dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_height">36dp</item>
+    </style>
+    <!--  ── Primary button (Save Contact) ───────────────────  -->
+    <style name="Widget.ContactsApp.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/blue_primary</item>
+        <item name="android:textColor">@color/bg_white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">26dp</item>
+        <item name="android:layout_height">52dp</item>
+    </style>
+    <!--  ── Outlined button (Import Contacts) ───────────────  -->
+    <style name="Widget.ContactsApp.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:backgroundTint">@color/bg_white</item>
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="strokeColor">@color/blue_primary</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+</resources>

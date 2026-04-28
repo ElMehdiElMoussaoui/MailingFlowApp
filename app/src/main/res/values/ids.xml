@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="bottomNavCampaigns" type="id" />
+    <item name="tvSortByDate" type="id" />
+    <item name="cardCampaign1" type="id" />
+    <item name="cardCampaign2" type="id" />
+    <item name="cardCampaign3" type="id" />
+    <item name="cardCampaign4" type="id" />
+    <item name="cardCampaign5" type="id" />
+    <item name="bottomNavHome" type="id" />
+    <item name="bottomNavStats" type="id" />
+    <item name="nav_statistics" type="id" />
+</resources>

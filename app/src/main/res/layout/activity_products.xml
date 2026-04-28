@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:layout_marginTop="15dp">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        app:elevation="3dp">
+
+        <!-- Toolbar normale -->
+        <LinearLayout
+            android:id="@+id/toolbarNormal"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#555555"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Product"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A2E" />
+
+            <ImageButton
+                android:id="@+id/btnSearch"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_search"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#555555"
+                android:contentDescription="Rechercher" />
+
+            <ImageButton
+                android:id="@+id/btnFilter"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_filter"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#555555"
+                android:contentDescription="Filtrer" />
+        </LinearLayout>
+
+        <!-- Toolbar recherche (cachée par défaut) -->
+        <LinearLayout
+            android:id="@+id/toolbarSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/btnSearchClose"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#555555" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusTopStart="22dp"
+                app:boxCornerRadiusTopEnd="22dp"
+                app:boxCornerRadiusBottomStart="22dp"
+                app:boxCornerRadiusBottomEnd="22dp"
+                app:boxStrokeColor="#E0E0E0"
+                app:hintEnabled="false"
+                app:startIconDrawable="@drawable/ic_search">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Rechercher un contact..."
+                    android:textSize="14sp"
+                    android:background="@null"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/btnSearchClear"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_error_circle"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="#AAAAAA"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <!-- Chips catégories -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="10dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupCategories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipElectronics"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Electronics" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipWearables"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wearables" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFitness"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fitness" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAudio"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Audio" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipOffice"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Office" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <!-- Panneau filtres avancés (caché par défaut) -->
+        <LinearLayout
+            android:id="@+id/panelFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="12dp"
+            android:background="#FFFFFF"
+            android:visibility="gone">
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="#F0F0F0" android:layout_marginBottom="10dp" />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="CATÉGORIE" android:textSize="11sp" android:textColor="#999999"
+                android:letterSpacing="0.08" android:layout_marginBottom="8dp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginBottom="6dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAll"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="All" android:textSize="12sp"
+                    android:textColor="#FFFFFF" android:backgroundTint="#2979FF"
+                    app:cornerRadius="17dp" android:layout_marginEnd="6dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnElectronics"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="Electronics" android:textSize="12sp"
+                    android:textColor="#555555" android:backgroundTint="#E8EAF6"
+                    app:cornerRadius="17dp" android:layout_marginEnd="6dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWearables"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="Wearables" android:textSize="12sp"
+                    android:textColor="#555555" android:backgroundTint="#E8EAF6"
+                    app:cornerRadius="17dp" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFitness"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="Fitness" android:textSize="12sp"
+                    android:textColor="#555555" android:backgroundTint="#E8EAF6"
+                    app:cornerRadius="17dp" android:layout_marginEnd="6dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAudio"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="Audio" android:textSize="12sp"
+                    android:textColor="#555555" android:backgroundTint="#E8EAF6"
+                    app:cornerRadius="17dp" android:layout_marginEnd="6dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnOffice"
+                    android:layout_width="wrap_content" android:layout_height="34dp"
+                    android:text="Office" android:textSize="12sp"
+                    android:textColor="#555555" android:backgroundTint="#E8EAF6"
+                    app:cornerRadius="17dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Contenu principal -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Compteur -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvItemCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="AVAILABLE ITEMS (5)"
+                android:textColor="#777777"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06" />
+
+            <TextView
+                android:id="@+id/tvMostRecent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Most Recent"
+                android:textColor="#2979FF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="#2979FF"
+            app:tint="#FFFFFF"
+            app:elevation="6dp"
+            android:contentDescription="Ajouter un produit" />
+
+        <!-- ── Bottom navigation ──────────────────────────────────────────────── -->
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:itemIconTint="@color/bottom_nav_colors"
+            app:itemTextColor="@color/bottom_nav_colors"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/bottom_nav_menu" />
+
+    </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

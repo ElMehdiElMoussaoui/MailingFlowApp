@@ -1,0 +1,153 @@
+<resources>
+
+    <string name="app_name">Mailing Flow</string>
+
+    <string name="title_products">Produits</string>
+    <string name="title_add_product">Ajouter un Produit</string>
+    <string name="title_product_detail">Détails du Produit</string>
+    <string name="available_items">ARTICLES DISPONIBLES (%1$d)</string>
+    <string name="most_recent">Plus récent</string>
+
+    <string name="label_product_name">Nom du produit</string>
+    <string name="label_category">Catégorie</string>
+    <string name="label_retail_price">Prix de vente</string>
+    <string name="label_description">Description du produit</string>
+    <string name="label_media">MÉDIA DU PRODUIT</string>
+
+    <string name="hint_product_name">Entrez un nom descriptif</string>
+    <string name="hint_category">Sélectionnez une catégorie</string>
+    <string name="hint_price">0.00</string>
+    <string name="hint_description">Décrivez les caractéristiques, les avantages et les spécifications de ce produit à vos clients…</string>
+
+    <string name="helper_name">Gardez-le sous 80 caractères pour une meilleure visibilité.</string>
+    <string name="helper_save">En enregistrant, vous acceptez nos directives sur les produits marchands.</string>
+
+    <string name="upload_title">Télécharger l\'image du produit</string>
+    <string name="upload_subtitle">Supporte PNG, JPG (Max 5Mo)</string>
+    <string name="upload_selected">Image sélectionnée ✓</string>
+
+    <string name="btn_save_product">Enregistrer le produit</string>
+    <string name="btn_edit_product">Modifier le produit</string>
+    <string name="btn_delete_product">Supprimer le produit</string>
+
+    <string name="error_name_required">Le nom est requis</string>
+    <string name="error_name_too_long">Maximum 80 caractères</string>
+    <string name="error_price_invalid">Prix invalide</string>
+    <string name="error_category_required">Veuillez sélectionner une catégorie</string>
+
+    <string name="product_added">"%1$s" ajouté !</string>
+    <string name="product_updated">"%1$s" modifié !</string>
+    <string name="product_deleted">"%1$s" supprimé</string>
+    <string name="action_cancel">Annuler</string>
+
+    <string name="search_hint_products">Rechercher un produit…</string>
+
+    <string name="cd_search">Rechercher</string>
+    <string name="cd_filter">Filtrer</string>
+    <string name="cd_back">Retour</string>
+    <string name="cd_add">Ajouter un produit</string>
+    <string name="cd_product_image">Image du produit</string>
+
+    <string name="end_of_list">Vous avez atteint la fin de la liste</string>
+    <string name="new_products_daily">Nouveaux produits ajoutés quotidiennement</string>
+
+    <string name="title_contacts">Contacts</string>
+    <string name="search_hint_contacts">Rechercher parmi %1$d contacts…</string>
+    <string name="label_email_status">STATUT EMAIL</string>
+    <string name="label_sending_status">STATUT ENVOI</string>
+
+    <string name="btn_conforme">Conforme</string>
+    <string name="btn_non_conforme">Non Conforme</string>
+    <string name="btn_envoye">Envoyé</string>
+    <string name="btn_non_envoye">Non Envoyé</string>
+
+    <string name="all_contacts">TOUS LES CONTACTS (%1$d)</string>
+    <string name="sort_by_name">Trier par Nom</string>
+    <string name="sort_by_recent">Trier par Récent</string>
+
+    <string name="import_success">%1$d contact(s) importé(s) !</string>
+    <string name="import_skipped">%1$d importé(s), %2$d ignoré(s)</string>
+    <string name="import_none">Aucun contact importé</string>
+    <string name="import_error">Erreur de lecture du fichier</string>
+
+    <string name="label_role">Rôle / Poste</string>
+    <string name="hint_role">ex : Directeur Marketing</string>
+
+    <string name="expand_title">Élargissez votre portée</string>
+    <string name="expand_desc">Organisez votre audience et développez la portée de votre marketing par e-mail avec des campagnes ciblées.</string>
+    <string name="btn_import_contacts">Importer des contacts</string>
+
+    <string name="contact_deleted">%1$s supprimé</string>
+
+    <string name="title_add_contact">Ajouter un contact</string>
+    <string name="section_new_recipient">Nouveau destinataire</string>
+    <string name="new_recipient_desc">Alimentez votre liste de diffusion en ajoutant un nouveau contact manuellement. Tous les champs obligatoires doivent être valides.</string>
+
+    <string name="label_full_name">Nom complet</string>
+    <string name="hint_full_name">ex : Alex Harrison</string>
+    <string name="helper_full_name">Entrez le nom légal ou préféré du contact.</string>
+
+    <string name="label_email">Adresse e-mail</string>
+    <string name="hint_email">alex.h@entreprise.com</string>
+    <string name="helper_email">Doit être un format d\'e-mail valide (ex : nom@domaine.com).</string>
+
+    <string name="label_phone">Numéro de téléphone</string>
+    <string name="label_optional">Optionnel</string>
+    <string name="hint_phone">+1 (555) 000-0000</string>
+    <string name="helper_phone">Inclure l\'indicatif du pays pour une portée internationale.</string>
+
+    <string name="privacy_note_title">Note sur la confidentialité</string>
+    <string name="privacy_note_desc">Assurez-vous d\'avoir l\'autorisation explicite d\'envoyer des e-mails marketing conformément aux règles RGPD/CAN-SPAM.</string>
+
+    <string name="btn_save_contact">Enregistrer le contact</string>
+    <string name="btn_cancel_return">Annuler et revenir</string>
+
+    <string name="error_email_required">L\'adresse e-mail est requise</string>
+    <string name="error_email_invalid">Format d\'e-mail invalide (ex : nom@domaine.com)</string>
+    <string name="error_email_exists">Un contact avec cet e-mail existe déjà</string>
+
+    <string name="menu_edit">Modifier</string>
+    <string name="menu_delete">Supprimer</string>
+
+    <string name="nav_home">Accueil</string>
+    <string name="nav_campaigns">Campagnes</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_contacts">Contacts</string>
+
+    <string name="cd_avatar">Photo de %1$s</string>
+    <string name="cd_email_status">Statut e-mail : %1$s</string>
+    <string name="cd_sending_status">Statut envoi : %1$s</string>
+    <string name="cd_more_options">Plus d\'options pour %1$s</string>
+    <string name="cd_btn_search">Rechercher</string>
+    <string name="cd_btn_filter">Filtrer</string>
+    <string name="cd_btn_back">Retour</string>
+    <string name="cd_btn_save">Sauvegarder</string>
+
+    <!-- Campaign related -->
+    <string name="title_campaigns">Campagnes</string>
+    <string name="btn_create_template">Créer une campagne</string>
+    <string name="sort_by_date">Trier par date</string>
+    <string name="new_campaign">Nouvelle Campagne</string>
+    <string name="edit_campaign">Modifier la campagne</string>
+    <string name="delete_campaign">Supprimer la campagne</string>
+    <string name="delete_campaign_msg">Voulez-vous supprimer cette campagne ?</string>
+    <string name="all_fields_required">Tous les champs sont obligatoires</string>
+    <string name="campaign_created">Campagne créée !</string>
+    <string name="campaign_updated">Campagne mise à jour</string>
+    <string name="process_finished_success">Processus terminé avec succès. Vérifiez le statut des contacts !</string>
+    <string name="mailing_started">Envoi démarré…</string>
+    <string name="mailing_failed">L\'envoi a échoué. Vérifiez la connexion.</string>
+    <string name="select_campaign">Sélectionnez votre campagne</string>
+    <string name="no_campaigns_found">Aucune campagne trouvée. Allez dans Campagnes pour en créer une.</string>
+    <string name="please_select_campaign">Veuillez d\'abord sélectionner une campagne</string>
+    <string name="no_contacts_found">Aucun contact trouvé ! Veuillez d\'abord ajouter des contacts.</string>
+    <string name="import_contacts_msg">Veuillez vous assurer que votre fichier (Excel ou CSV) suit cet ordre de colonnes :\n\nColonne A : Nom complet\nColonne B : Adresse e-mail\nColonne C : Numéro de téléphone (Optionnel)\n\nLa première ligne doit être un en-tête et sera ignorée.</string>
+    <string name="select_valid_product">Veuillez sélectionner un produit valide</string>
+    <string name="create_product_first">Veuillez d\'abord créer un produit !</string>
+    <string name="btn_pending">Trier par En attente</string>
+    <string name="btn_sent">Trier par Envoyé</string>
+    <string name="btn_failed">Trier par Échoué</string>
+    <string name="btn_yes">Oui</string>
+    <string name="btn_no">Non</string>
+
+</resources>

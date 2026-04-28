@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/ic_email.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#2979FF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M4,5 L20,5 L20,17 A2,2 0,0 1,18 19 L6,19 A2,2 0,0 1,4 17 Z" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#2979FF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M4,5 L12,13 L20,5" />
+</vector>
