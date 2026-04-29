@@ -299,17 +299,7 @@
             android:paddingEnd="12dp"
             android:paddingBottom="80dp"
             android:clipToPadding="false" />
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_add"
-            app:backgroundTint="#2979FF"
-            app:tint="#FFFFFF"
-            app:elevation="6dp"
-            android:contentDescription="Ajouter un produit" />
+
 
         <!-- ── Bottom navigation ──────────────────────────────────────────────── -->
 
@@ -325,6 +315,16 @@
             app:menu="@menu/bottom_nav_menu" />
 
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="90dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="#2979FF"
+        app:tint="#FFFFFF"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,6 @@
 package com.example.appmailing.statistique
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -19,14 +20,25 @@ class StatistiqueActivity : AppCompatActivity() {
 
     private lateinit var database: AppDatabase
 
+    //  ADDED ONLY
+    private var startDate: Long = 0L
+    private var endDate: Long = System.currentTimeMillis()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistique)
-        
+
         database = AppDatabase.getDatabase(this)
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener { finish() }
+
+        //  ADDED CALENDAR
+        val btnCalendar = findViewById<ImageView>(R.id.btnCalendar)
+        val tvDateRange = findViewById<TextView>(R.id.tvDateRange)
+
+        btnCalendar.setOnClickListener { showCalendar() }
+        tvDateRange.setOnClickListener { showCalendar() }
 
         setupBottomNav()
         setupDateHeader()
@@ -37,26 +49,54 @@ class StatistiqueActivity : AppCompatActivity() {
         val tvDateRange = findViewById<TextView>(R.id.tvDateRange)
         val sdf = SimpleDateFormat("MMM dd", Locale.getDefault())
         val calendar = Calendar.getInstance()
+
         val today = sdf.format(calendar.time)
         calendar.add(Calendar.DAY_OF_YEAR, -7)
         val weekAgo = sdf.format(calendar.time)
-        
+
         tvDateRange?.text = "$weekAgo — $today"
     }
 
+    //  CALENDAR FUNCTION
+    private fun showCalendar() {
+
+        val tvDateRange = findViewById<TextView>(R.id.tvDateRange)
+
+        val start = Calendar.getInstance()
+        val end = Calendar.getInstance()
+
+        DatePickerDialog(this, { _, y, m, d ->
+            start.set(y, m, d)
+
+            DatePickerDialog(this, { _, y2, m2, d2 ->
+                end.set(y2, m2, d2)
+
+                val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+
+                tvDateRange.text =
+                    "${sdf.format(start.time)} — ${sdf.format(end.time)}"
+
+                startDate = start.timeInMillis
+                endDate = end.timeInMillis + 86400000
+
+                observeStats()
+
+            }, end.get(Calendar.YEAR), end.get(Calendar.MONTH), end.get(Calendar.DAY_OF_MONTH)).show()
+
+        }, start.get(Calendar.YEAR), start.get(Calendar.MONTH), start.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
     private fun observeStats() {
-        // KPI Cards
+
         val tvOpenRate = findViewById<TextView>(R.id.tvOpenRate)
         val tvClickRate = findViewById<TextView>(R.id.tvClickRate)
         val tvSuccessRate = findViewById<TextView>(R.id.tvSuccessPercent)
-        
-        // Delivery Status Section
+
         val tvDonutPercent = findViewById<TextView>(R.id.tvDonutPercent)
         val tvDeliveredCount = findViewById<TextView>(R.id.tvDeliveredCount)
         val tvBouncedCount = findViewById<TextView>(R.id.tvBouncedCount)
         val tvTotalEmailsSent = findViewById<TextView>(R.id.tvTotalEmailsSent)
 
-        // Bar Chart Views (Mon - Fri)
         val monOpen = findViewById<View>(R.id.monOpen)
         val monClick = findViewById<View>(R.id.monClick)
         val tueOpen = findViewById<View>(R.id.tueOpen)
@@ -69,43 +109,46 @@ class StatistiqueActivity : AppCompatActivity() {
         val friClick = findViewById<View>(R.id.friClick)
 
         database.sentEmailDao().getAllSentEmails().observe(this) { allEmails ->
-            val emails = allEmails ?: emptyList()
+
+            // ️ ONLY CHANGE (FILTER ADDED)
+            val emails = (allEmails ?: emptyList()).filter {
+                it.timestamp in startDate..endDate
+            }
+
             val total = emails.size
             val successCount = emails.count { it.status == "SUCCESS" }
             val failedCount = total - successCount
-            
-            // Real Dynamic Statistics from Database
+
             val openCount = emails.count { it.opened }
             val clickCount = emails.count { it.clicked }
 
-            // 1. Update Counts
             tvTotalEmailsSent?.text = total.toString()
             tvDeliveredCount?.text = successCount.toString()
             tvBouncedCount?.text = failedCount.toString()
-            
-            // 2. Update Percentages
+
             if (total > 0) {
+
                 val successPercent = (successCount.toDouble() / total.toDouble() * 100).toInt()
-                val openPercent = if (successCount > 0) (openCount.toDouble() / successCount.toDouble() * 100).toInt() else 0
-                val clickPercent = if (openCount > 0) (clickCount.toDouble() / openCount.toDouble() * 100).toInt() else 0
+                val openPercent = if (successCount > 0)
+                    (openCount.toDouble() / successCount.toDouble() * 100).toInt() else 0
+                val clickPercent = if (openCount > 0)
+                    (clickCount.toDouble() / openCount.toDouble() * 100).toInt() else 0
 
                 tvDonutPercent?.text = "$successPercent%"
                 tvSuccessRate?.text = "$successPercent%"
                 tvOpenRate?.text = "$openPercent%"
                 tvClickRate?.text = "$clickPercent%"
-                
-                // 3. Update Bar Chart based on daily data (Logic to group by day of week)
+
                 val calendar = Calendar.getInstance()
-                val dailyStats = emails.groupBy { 
+
+                val dailyStats = emails.groupBy {
                     calendar.timeInMillis = it.timestamp
                     calendar.get(Calendar.DAY_OF_WEEK)
                 }
 
                 fun getDayStats(day: Int): Pair<Int, Int> {
                     val dayEmails = dailyStats[day] ?: return 0 to 0
-                    val opens = dayEmails.count { it.opened }
-                    val clicks = dayEmails.count { it.clicked }
-                    return opens to clicks
+                    return dayEmails.count { it.opened } to dayEmails.count { it.clicked }
                 }
 
                 updateBarHeight(monOpen, calculateBarHeightPercent(getDayStats(Calendar.MONDAY).first, successCount))
@@ -124,6 +167,7 @@ class StatistiqueActivity : AppCompatActivity() {
                 tvSuccessRate?.text = "0%"
                 tvOpenRate?.text = "0%"
                 tvClickRate?.text = "0%"
+
                 resetBars(monOpen, monClick, tueOpen, tueClick, wedOpen, wedClick, thuOpen, thuClick, friOpen, friClick)
             }
         }
@@ -154,19 +198,19 @@ class StatistiqueActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     startActivity(Intent(this, HomeScreen::class.java))
-                    finish(); overridePendingTransition(0, 0); true
+                    overridePendingTransition(0, 0); true
                 }
                 R.id.nav_campaigns -> {
                     startActivity(Intent(this, CampaignActivity::class.java))
-                    finish(); overridePendingTransition(0, 0); true
+                    overridePendingTransition(0, 0); true
                 }
                 R.id.nav_contacts -> {
                     startActivity(Intent(this, ContactsActivity::class.java))
-                    finish(); overridePendingTransition(0, 0); true
+                    overridePendingTransition(0, 0); true
                 }
                 R.id.nav_products -> {
                     startActivity(Intent(this, ProductsActivity::class.java))
-                    finish(); overridePendingTransition(0, 0); true
+                    overridePendingTransition(0, 0); true
                 }
                 R.id.nav_stats -> true
                 else -> false

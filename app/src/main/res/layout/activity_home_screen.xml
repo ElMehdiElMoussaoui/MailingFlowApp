@@ -26,7 +26,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_more_vert"
+                android:src="@drawable/ic_menu"
                 app:tint="#555555" />
 
             <TextView
