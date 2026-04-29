@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -48,6 +49,13 @@ class ContactsActivity : AppCompatActivity() {
 
     private lateinit var toolbarNormal: View
     private lateinit var toolbarSearch: View
+    private lateinit var toolbarSelection: View
+    private lateinit var tvSelectionCount: TextView
+    private lateinit var cbSelectAll: CheckBox
+    private lateinit var btnDeleteSelected: ImageButton
+    private lateinit var btnCancelSelection: ImageButton
+    private lateinit var btnImportHeader: ImageButton
+
     private lateinit var etSearch: TextInputEditText
     private lateinit var btnSearch: ImageButton
     private lateinit var btnFilter: ImageButton
@@ -89,6 +97,7 @@ class ContactsActivity : AppCompatActivity() {
         bindViews()
         setupRecyclerView()
         setupToolbarSearch()
+        setupSelectionToolbar()
         setupFilters()
         setupButtons()
         setupBottomNav()
@@ -106,8 +115,15 @@ class ContactsActivity : AppCompatActivity() {
         btnImportContacts = findViewById(R.id.btnImportContacts)
         tvSortByName      = findViewById(R.id.tvSortByName)
 
-        toolbarNormal   = findViewById(R.id.toolbarNormal)
-        toolbarSearch   = findViewById(R.id.toolbarSearch)
+        toolbarNormal    = findViewById(R.id.toolbarNormal)
+        toolbarSearch    = findViewById(R.id.toolbarSearch)
+        toolbarSelection = findViewById(R.id.toolbarSelection)
+        tvSelectionCount = findViewById(R.id.tvSelectionCount)
+        cbSelectAll      = findViewById(R.id.cbSelectAll)
+        btnDeleteSelected = findViewById(R.id.btnDeleteSelected)
+        btnCancelSelection = findViewById(R.id.btnCancelSelection)
+        btnImportHeader    = findViewById(R.id.btnImport)
+
         etSearch        = findViewById(R.id.etSearch)
         btnSearch       = findViewById(R.id.btnSearch)
         btnFilter       = findViewById(R.id.btnFilter)
@@ -134,10 +150,57 @@ class ContactsActivity : AppCompatActivity() {
         adapter = ContactsAdapter(
             onContactClick = { contact -> openDetail(contact) },
             onDeleteClick = { contact -> deleteContact(contact) },
-            onEditClick = { contact -> openEdit(contact) }
+            onEditClick = { contact -> openEdit(contact) },
+            onSelectionChanged = { count ->
+                tvSelectionCount.text = "$count selected"
+                cbSelectAll.isChecked = count > 0 && count == adapter.itemCount
+                
+                if (count > 0 && toolbarSelection.visibility == View.GONE) {
+                    toolbarNormal.visibility = View.GONE
+                    toolbarSelection.visibility = View.VISIBLE
+                } else if (count == 0 && toolbarSelection.visibility == View.VISIBLE) {
+                    toolbarSelection.visibility = View.GONE
+                    toolbarNormal.visibility = View.VISIBLE
+                }
+            }
         )
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+    }
+
+    private fun setupSelectionToolbar() {
+        btnCancelSelection.setOnClickListener {
+            adapter.setSelectionMode(false)
+            toolbarSelection.visibility = View.GONE
+            toolbarNormal.visibility = View.VISIBLE
+        }
+
+        cbSelectAll.setOnClickListener {
+            if (cbSelectAll.isChecked) adapter.selectAll() else adapter.clearSelection()
+        }
+
+        btnDeleteSelected.setOnClickListener {
+            val selectedIds = adapter.getSelectedIds()
+            if (selectedIds.isEmpty()) return@setOnClickListener
+
+            AlertDialog.Builder(this)
+                .setTitle("Delete Selected")
+                .setMessage("Are you sure you want to delete ${selectedIds.size} contacts?")
+                .setPositiveButton("Delete") { _, _ ->
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val contactsToDelete = fullContactsList.filter { it.id in selectedIds }
+                        contactsToDelete.forEach { db.contactDao().deleteContact(it) }
+                        withContext(Dispatchers.Main) {
+                            adapter.setSelectionMode(false)
+                            toolbarSelection.visibility = View.GONE
+                            toolbarNormal.visibility = View.VISIBLE
+                            Snackbar.make(recyclerView, "${selectedIds.size} contacts deleted", Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     private fun deleteContact(contact: Contact) {
@@ -213,6 +276,9 @@ class ContactsActivity : AppCompatActivity() {
         }
         adapter.filter(baseList, searchQuery, activeEmailFilter, activeSendingFilter)
         tvContactCount.text = getString(R.string.all_contacts, adapter.itemCount)
+        
+        val showInfo = adapter.itemCount == 0 && searchQuery.isEmpty() && activeEmailFilter == null && activeSendingFilter == null
+        findViewById<View>(R.id.layoutInfo).visibility = if (showInfo) View.VISIBLE else View.GONE
     }
 
     private fun setupFilters() {
@@ -343,6 +409,9 @@ class ContactsActivity : AppCompatActivity() {
         btnImportContacts.setOnClickListener {
             showImportFormatDialog()
         }
+        btnImportHeader.setOnClickListener {
+            showImportFormatDialog()
+        }
         tvSortByName.setOnClickListener {
             isSortRecent = !isSortRecent
             tvSortByName.text = if (isSortRecent) getString(R.string.sort_by_name) else getString(R.string.sort_by_recent)
@@ -380,23 +449,29 @@ class ContactsActivity : AppCompatActivity() {
             when (item.itemId) {
 
                 R.id.nav_home -> {
+                    startActivity(Intent(this, HomeScreen::class.java))
+                    finish()
+                    overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_campaigns -> {
                     startActivity(Intent(this, CampaignActivity::class.java))
+                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_stats -> {
                     startActivity(Intent(this, StatistiqueActivity::class.java))
+                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_products -> {
                     startActivity(Intent(this, ProductsActivity::class.java))
+                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
@@ -405,6 +480,16 @@ class ContactsActivity : AppCompatActivity() {
 
                 else -> false
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (toolbarSelection.visibility == View.VISIBLE) {
+            adapter.setSelectionMode(false)
+            toolbarSelection.visibility = View.GONE
+            toolbarNormal.visibility = View.VISIBLE
+        } else {
+            super.onBackPressed()
         }
     }
 }

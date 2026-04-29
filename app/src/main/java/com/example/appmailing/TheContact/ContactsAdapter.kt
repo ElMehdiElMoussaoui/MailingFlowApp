@@ -3,6 +3,7 @@ package com.example.appmailing.TheContact
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,10 +14,13 @@ import com.example.appmailing.R
 class ContactsAdapter(
     private val onContactClick: (Contact) -> Unit,
     private val onDeleteClick: (Contact) -> Unit,
-    private val onEditClick: (Contact) -> Unit
+    private val onEditClick: (Contact) -> Unit,
+    private val onSelectionChanged: (Int) -> Unit
 ) : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
 
     private var filteredContacts = listOf<Contact>()
+    private var isSelectionMode = false
+    private val selectedContactIds = mutableSetOf<Int>()
 
     fun filter(all: List<Contact>, query: String, emailF: EmailStatus?, sendF: SendingStatus?) {
         filteredContacts = all.filter { c ->
@@ -31,6 +35,37 @@ class ContactsAdapter(
         }
         notifyDataSetChanged()
     }
+
+    fun setSelectionMode(enabled: Boolean) {
+        isSelectionMode = enabled
+        if (!enabled) selectedContactIds.clear()
+        notifyDataSetChanged()
+    }
+
+    fun toggleSelection(contactId: Int) {
+        if (selectedContactIds.contains(contactId)) {
+            selectedContactIds.remove(contactId)
+        } else {
+            selectedContactIds.add(contactId)
+        }
+        notifyDataSetChanged()
+        onSelectionChanged(selectedContactIds.size)
+    }
+
+    fun selectAll() {
+        selectedContactIds.clear()
+        selectedContactIds.addAll(filteredContacts.map { it.id })
+        notifyDataSetChanged()
+        onSelectionChanged(selectedContactIds.size)
+    }
+
+    fun clearSelection() {
+        selectedContactIds.clear()
+        notifyDataSetChanged()
+        onSelectionChanged(0)
+    }
+
+    fun getSelectedIds(): List<Int> = selectedContactIds.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
@@ -76,7 +111,31 @@ class ContactsAdapter(
             }
         }
 
-        holder.itemView.setOnClickListener { onContactClick(contact) }
+        // Selection Logic
+        holder.cbSelect.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
+        holder.layoutActions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
+        holder.cbSelect.isChecked = selectedContactIds.contains(contact.id)
+
+        holder.itemView.setOnClickListener {
+            if (isSelectionMode) {
+                toggleSelection(contact.id)
+            } else {
+                onContactClick(contact)
+            }
+        }
+
+        holder.itemView.setOnLongClickListener {
+            if (!isSelectionMode) {
+                setSelectionMode(true)
+                toggleSelection(contact.id)
+                true
+            } else false
+        }
+
+        holder.cbSelect.setOnClickListener {
+            toggleSelection(contact.id)
+        }
+
         holder.btnEdit.setOnClickListener { onEditClick(contact) }
         holder.btnDelete.setOnClickListener { onDeleteClick(contact) }
     }
@@ -92,5 +151,7 @@ class ContactsAdapter(
         val ivSendingStatus: ImageView = view.findViewById(R.id.ivSendingStatus)
         val btnEdit: ImageButton = view.findViewById(R.id.btnEdit)
         val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
+        val cbSelect: CheckBox = view.findViewById(R.id.cbSelect)
+        val layoutActions: View = view.findViewById(R.id.layoutActions)
     }
 }

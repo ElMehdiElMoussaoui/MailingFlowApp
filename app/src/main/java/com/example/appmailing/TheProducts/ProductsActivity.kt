@@ -259,24 +259,29 @@ class ProductsActivity : AppCompatActivity() {
             when (item.itemId) {
 
                 R.id.nav_home -> {
+                    startActivity(Intent(this, HomeScreen::class.java))
+                    finish()
                     true
                 }
 
                 R.id.nav_campaigns -> {
                     startActivity(Intent(this, CampaignActivity::class.java))
                     overridePendingTransition(0, 0)
+                    finish()
                     true
                 }
 
                 R.id.nav_stats -> {
                     startActivity(Intent(this, StatistiqueActivity::class.java))
                     overridePendingTransition(0, 0)
+                    finish()
                     true
                 }
 
                 R.id.nav_contacts -> {
                     startActivity(Intent(this, ContactsActivity::class.java))
                     overridePendingTransition(0, 0)
+                    finish()
                     true
                 }
 

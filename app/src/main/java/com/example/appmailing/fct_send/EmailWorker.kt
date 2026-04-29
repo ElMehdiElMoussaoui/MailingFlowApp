@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.appmailing.statistique.AppDatabase
 import com.example.appmailing.statistique.SentEmailEntity
+
 /// The main  App
 
 class EmailWorker(appContext: Context, workerParams: WorkerParameters) :
