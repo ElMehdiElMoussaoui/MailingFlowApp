@@ -117,7 +117,7 @@ class HomeScreen : AppCompatActivity() {
             selectedCampaign?.let { campaign ->
                 checkContactsAndSend(campaign)
             } ?: run {
-                Toast.makeText(this, "Please select a campaign first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.please_select_campaign), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -175,7 +175,7 @@ class HomeScreen : AppCompatActivity() {
             val contactsCount = database.contactDao().getContactsCount()
 
             if (contactsCount == 0) {
-                Toast.makeText(this@HomeScreen, "No contacts found! Please add contacts first.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@HomeScreen, getString(R.string.no_contacts_found), Toast.LENGTH_LONG).show()
             } else {
                 database.contactDao().resetAllSendingStatus()
                 startMailingProcess(campaign)
@@ -185,13 +185,13 @@ class HomeScreen : AppCompatActivity() {
 
     private fun showCampaignSelectionDialog(tvStatus: TextView, ivPreview: ImageView) {
         if (campaignList.isEmpty()) {
-            Toast.makeText(this, "No campaigns found. Go to Campaigns to create one.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.no_campaigns_found), Toast.LENGTH_LONG).show()
             return
         }
 
         val names = campaignList.map { it.title }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("Select Your Campaign")
+            .setTitle(getString(R.string.select_campaign))
             .setItems(names) { _, which ->
                 val selected = campaignList[which]
                 selectedCampaign = selected
@@ -202,7 +202,7 @@ class HomeScreen : AppCompatActivity() {
                     .putInt("SELECTED_CAMPAIGN_ID", selected.id)
                     .apply()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.action_cancel), null)
             .show()
     }
 
@@ -211,7 +211,6 @@ class HomeScreen : AppCompatActivity() {
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        // Removed "Bearer " prefix as it is added in EmailWorker
         val inputData = workDataOf(
             "api_key" to "",
             "subject" to campaign.emailSubject,
@@ -226,18 +225,22 @@ class HomeScreen : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueue(mailWorkRequest)
         
-        Toast.makeText(this, "Mailing started...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.mailing_started), Toast.LENGTH_SHORT).show()
 
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(mailWorkRequest.id)
             .observe(this, Observer { workInfo ->
                 if (workInfo != null && workInfo.state.isFinished) {
-                    // Logic updated: EmailWorker returns Result.success() even if API fails (to update DB), 
-                    // but we should verify if actually successful by checking the workInfo output if needed.
-                    // For now, let's keep it simple.
                     if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                        Toast.makeText(this, "Process finished by successfully. Check Contact status!", Toast.LENGTH_LONG).show()
+                        val successCount = workInfo.outputData.getInt("success", 0)
+                        val failedCount = workInfo.outputData.getInt("failed", 0)
+                        
+                        if (failedCount > 0) {
+                            Toast.makeText(this, "Process finished. Sent: $successCount, Failed: $failedCount. Check Contact status!", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this, "All emails sent successfully!", Toast.LENGTH_LONG).show()
+                        }
                     } else {
-                        Toast.makeText(this, "Mailing failed. Check connection.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, getString(R.string.mailing_failed), Toast.LENGTH_LONG).show()
                     }
                 }
             })

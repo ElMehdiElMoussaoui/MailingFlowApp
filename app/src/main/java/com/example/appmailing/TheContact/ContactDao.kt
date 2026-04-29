@@ -9,6 +9,7 @@ interface ContactDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContact(contact: Contact): Long
 
+    // إدخال جماعي (يستخدم في الاستيراد)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertContacts(contacts: List<Contact>)
 
@@ -29,6 +30,10 @@ interface ContactDao {
 
     @Delete
     suspend fun deleteContact(contact: Contact)
+
+
+    @Delete
+    suspend fun deleteContacts(contacts: List<Contact>)
 
     @Query("DELETE FROM contacts_table")
     suspend fun deleteAllContacts()
