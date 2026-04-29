@@ -36,7 +36,6 @@ class ContactDetailActivity : AppCompatActivity() {
         contactId = intent.getIntExtra(EXTRA_CONTACT_ID, -1)
         val db = AppDatabase.getDatabase(applicationContext)
 
-        // Observe the contact from DB to auto-update UI after editing
         if (contactId != -1) {
             db.contactDao().getContactById(contactId).observe(this) { updatedContact ->
                 updatedContact?.let {
@@ -45,10 +44,8 @@ class ContactDetailActivity : AppCompatActivity() {
             }
         }
 
-        // Back button
         findViewById<ImageButton>(R.id.btnDetailBack).setOnClickListener { finish() }
 
-        // Edit button - Removed finish() to stay on details
         findViewById<MaterialButton>(R.id.btnDetailEdit).setOnClickListener {
             val name  = findViewById<TextView>(R.id.tvDetailName).text.toString()
             val email = findViewById<TextView>(R.id.tvDetailEmail).text.toString()
@@ -63,7 +60,6 @@ class ContactDetailActivity : AppCompatActivity() {
             startActivity(editIntent)
         }
 
-        // Delete button with Confirmation Dialog
         findViewById<MaterialButton>(R.id.btnDetailDelete).setOnClickListener {
             val contactName = findViewById<TextView>(R.id.tvDetailName).text.toString()
             
@@ -77,12 +73,8 @@ class ContactDetailActivity : AppCompatActivity() {
                             fullName = contactName,
                             email = findViewById<TextView>(R.id.tvDetailEmail).text.toString()
                         )
-
                         db.contactDao().deleteContact(contactToDelete)
-
-                        withContext(Dispatchers.Main) {
-                            finish()
-                        }
+                        withContext(Dispatchers.Main) { finish() }
                     }
                 }
                 .setNegativeButton("Cancel", null)
@@ -119,16 +111,26 @@ class ContactDetailActivity : AppCompatActivity() {
 
         val ivSending = findViewById<ImageView>(R.id.ivDetailSendingStatus)
         val tvSendingStatus = findViewById<TextView>(R.id.tvDetailSendingStatus)
-        if (sendingStatus == SendingStatus.SENT) {
-            ivSending.setImageResource(R.drawable.ic_email_sent)
-            ivSending.setColorFilter(getColor(R.color.blue_primary))
-            tvSendingStatus.text = "Envoyé"
-            tvSendingStatus.setTextColor(getColor(R.color.blue_primary))
-        } else {
-            ivSending.setImageResource(R.drawable.ic_email_unsent)
-            ivSending.setColorFilter(getColor(R.color.grey_400))
-            tvSendingStatus.text = "Non Envoyé"
-            tvSendingStatus.setTextColor(getColor(R.color.grey_400))
+        
+        when (sendingStatus) {
+            SendingStatus.SENT -> {
+                ivSending.setImageResource(R.drawable.ic_email_sent)
+                ivSending.setColorFilter(getColor(R.color.blue_primary))
+                tvSendingStatus.text = "Envoyé"
+                tvSendingStatus.setTextColor(getColor(R.color.blue_primary))
+            }
+            SendingStatus.FAILED -> {
+                ivSending.setImageResource(R.drawable.ic_error_circle)
+                ivSending.setColorFilter(getColor(R.color.red_400))
+                tvSendingStatus.text = "Échoué"
+                tvSendingStatus.setTextColor(getColor(R.color.red_400))
+            }
+            else -> {
+                ivSending.setImageResource(R.drawable.ic_email_unsent)
+                ivSending.setColorFilter(getColor(R.color.grey_400))
+                tvSendingStatus.text = "Non Envoyé"
+                tvSendingStatus.setTextColor(getColor(R.color.grey_400))
+            }
         }
     }
 }

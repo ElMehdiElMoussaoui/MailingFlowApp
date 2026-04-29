@@ -10,6 +10,7 @@ data class Product(
     val name: String,
     val category: String,
     val price: Double,
+    val currency: String = "MAD",
     val description: String,
     val imageUri: String? = null
 ) : Serializable
@@ -23,4 +24,8 @@ object ProductCategory {
     const val OFFICE      = "Office"
 
     val all = listOf(ALL, ELECTRONICS, WEARABLES, FITNESS, AUDIO, OFFICE)
+}
+
+object CurrencyType {
+    val all = listOf("MAD", "USD", "EUR", "GBP")
 }

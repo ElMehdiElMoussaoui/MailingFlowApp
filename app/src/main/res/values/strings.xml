@@ -60,10 +60,12 @@
     <string name="btn_non_conforme">Non Conforme</string>
     <string name="btn_envoye">Envoyé</string>
     <string name="btn_non_envoye">Non Envoyé</string>
+    <string name="btn_echoue">Échoué</string>
 
     <string name="all_contacts">TOUS LES CONTACTS (%1$d)</string>
     <string name="sort_by_name">Trier par Nom</string>
     <string name="sort_by_recent">Trier par Récent</string>
+    <string name="selected_count">%1$d sélectionnés</string>
 
     <string name="import_success">%1$d contact(s) importé(s) !</string>
     <string name="import_skipped">%1$d importé(s), %2$d ignoré(s)</string>
@@ -134,7 +136,7 @@
     <string name="all_fields_required">Tous les champs sont obligatoires</string>
     <string name="campaign_created">Campagne créée !</string>
     <string name="campaign_updated">Campagne mise à jour</string>
-    <string name="process_finished_success">Processus terminé avec succès. Vérifiez le statut des contacts !</string>
+    <string name="process_finished_success">Processus terminé. Vérifiez le statut des contacts !</string>
     <string name="mailing_started">Envoi démarré…</string>
     <string name="mailing_failed">L\'envoi a échoué. Vérifiez la connexion.</string>
     <string name="select_campaign">Sélectionnez votre campagne</string>
@@ -149,5 +151,6 @@
     <string name="btn_failed">Trier par Échoué</string>
     <string name="btn_yes">Oui</string>
     <string name="btn_no">Non</string>
+    <string name="import_hint_columns">🚨 IMPORTANT: Col A=Nom, B=Email, C=Tel</string>
 
 </resources>

@@ -46,6 +46,7 @@ class ContactsActivity : AppCompatActivity() {
     private lateinit var fabAddContact: FloatingActionButton
     private lateinit var btnImportContacts: MaterialButton
     private lateinit var tvSortByName: TextView
+    private lateinit var layoutInfo: View
 
     private lateinit var toolbarNormal: View
     private lateinit var toolbarSearch: View
@@ -67,6 +68,7 @@ class ContactsActivity : AppCompatActivity() {
     private lateinit var btnNonConforme: MaterialButton
     private lateinit var btnEnvoye: MaterialButton
     private lateinit var btnNonEnvoye: MaterialButton
+    private lateinit var btnEchoue: MaterialButton
 
     private lateinit var db: AppDatabase
     private var fullContactsList = listOf<Contact>()
@@ -114,6 +116,7 @@ class ContactsActivity : AppCompatActivity() {
         fabAddContact     = findViewById(R.id.fabAddContact)
         btnImportContacts = findViewById(R.id.btnImportContacts)
         tvSortByName      = findViewById(R.id.tvSortByName)
+        layoutInfo        = findViewById(R.id.layoutInfo)
 
         toolbarNormal    = findViewById(R.id.toolbarNormal)
         toolbarSearch    = findViewById(R.id.toolbarSearch)
@@ -135,6 +138,7 @@ class ContactsActivity : AppCompatActivity() {
         btnNonConforme  = findViewById(R.id.btnNonConforme)
         btnEnvoye       = findViewById(R.id.btnEnvoye)
         btnNonEnvoye    = findViewById(R.id.btnNonEnvoye)
+        btnEchoue       = findViewById(R.id.btnEchoue)
         
         tvSortByName.text = getString(R.string.sort_by_recent)
     }
@@ -152,7 +156,7 @@ class ContactsActivity : AppCompatActivity() {
             onDeleteClick = { contact -> deleteContact(contact) },
             onEditClick = { contact -> openEdit(contact) },
             onSelectionChanged = { count ->
-                tvSelectionCount.text = "$count selected"
+                tvSelectionCount.text = getString(R.string.selected_count, count)
                 cbSelectAll.isChecked = count > 0 && count == adapter.itemCount
                 
                 if (count > 0 && toolbarSelection.visibility == View.GONE) {
@@ -166,6 +170,8 @@ class ContactsActivity : AppCompatActivity() {
         )
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+        recyclerView.setHasFixedSize(true)
+        recyclerView.itemAnimator = null // Optimization: Disable default animations during selection
     }
 
     private fun setupSelectionToolbar() {
@@ -189,7 +195,7 @@ class ContactsActivity : AppCompatActivity() {
                 .setPositiveButton("Delete") { _, _ ->
                     lifecycleScope.launch(Dispatchers.IO) {
                         val contactsToDelete = fullContactsList.filter { it.id in selectedIds }
-                        contactsToDelete.forEach { db.contactDao().deleteContact(it) }
+                        db.contactDao().deleteContacts(contactsToDelete)
                         withContext(Dispatchers.Main) {
                             adapter.setSelectionMode(false)
                             toolbarSelection.visibility = View.GONE
@@ -269,16 +275,39 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun applyFilters() {
-        val baseList = if (isSortRecent) {
-            fullContactsList.sortedByDescending { it.id }
-        } else {
-            fullContactsList.sortedBy { it.fullName }
+        val query = searchQuery
+        val emailF = activeEmailFilter
+        val sendF = activeSendingFilter
+        val sortRecent = isSortRecent
+
+        val list = fullContactsList
+
+        lifecycleScope.launch(Dispatchers.Default) {
+            val baseList = if (sortRecent) {
+                list.sortedByDescending { it.id }
+            } else {
+                list.sortedBy { it.fullName }
+            }
+            
+            val filtered = baseList.filter { c ->
+                val matchQuery = query.isBlank() || 
+                        c.fullName.contains(query, true) || 
+                        c.email.contains(query, true)
+                
+                val matchEmail = emailF == null || c.emailStatus == emailF
+                val matchSend  = sendF == null || c.sendingStatus == sendF
+                
+                matchQuery && matchEmail && matchSend
+            }
+
+            withContext(Dispatchers.Main) {
+                adapter.submitList(filtered)
+                tvContactCount.text = getString(R.string.all_contacts, filtered.size)
+                
+                val showInfo = filtered.isEmpty() && query.isEmpty() && emailF == null && sendF == null
+                layoutInfo.visibility = if (showInfo) View.VISIBLE else View.GONE
+            }
         }
-        adapter.filter(baseList, searchQuery, activeEmailFilter, activeSendingFilter)
-        tvContactCount.text = getString(R.string.all_contacts, adapter.itemCount)
-        
-        val showInfo = adapter.itemCount == 0 && searchQuery.isEmpty() && activeEmailFilter == null && activeSendingFilter == null
-        findViewById<View>(R.id.layoutInfo).visibility = if (showInfo) View.VISIBLE else View.GONE
     }
 
     private fun setupFilters() {
@@ -292,6 +321,7 @@ class ContactsActivity : AppCompatActivity() {
         btnNonConforme.setOnClickListener { toggleEmailFilter(EmailStatus.NON_CONFORME) }
         btnEnvoye.setOnClickListener { toggleSendingFilter(SendingStatus.SENT) }
         btnNonEnvoye.setOnClickListener { toggleSendingFilter(SendingStatus.PENDING) }
+        btnEchoue.setOnClickListener { toggleSendingFilter(SendingStatus.FAILED) }
     }
 
     private fun toggleEmailFilter(status: EmailStatus) {
@@ -321,12 +351,13 @@ class ContactsActivity : AppCompatActivity() {
         updateBtn(btnNonConforme, activeEmailFilter == EmailStatus.NON_CONFORME)
         updateBtn(btnEnvoye, activeSendingFilter == SendingStatus.SENT)
         updateBtn(btnNonEnvoye, activeSendingFilter == SendingStatus.PENDING)
+        updateBtn(btnEchoue, activeSendingFilter == SendingStatus.FAILED)
     }
 
     private fun handleFileImport(uri: Uri) {
         val fileName = getFileName(uri)
         if (fileName != null && (fileName.endsWith(".csv", true) || fileName.endsWith(".xlsx", true) || fileName.endsWith(".xls", true))) {
-            if (fileName.endsWith(".csv", true)) importFromCsv(uri) else importFromExcel(uri)
+            if (fileName.endsWith(".csv", true) || fileName.endsWith(".csv", true)) importFromCsv(uri) else importFromExcel(uri)
         } else {
             Snackbar.make(recyclerView, "Format non supporté", Snackbar.LENGTH_SHORT).show()
         }
@@ -334,27 +365,28 @@ class ContactsActivity : AppCompatActivity() {
 
     private fun importFromCsv(uri: Uri) {
         lifecycleScope.launch(Dispatchers.IO) {
-            var imported = 0
+            val contactsToInsert = mutableListOf<Contact>()
             try {
                 contentResolver.openInputStream(uri)?.bufferedReader()?.useLines { lines ->
                     lines.forEachIndexed { idx, line ->
                         if (idx == 0 || line.isBlank()) return@forEachIndexed
                         val cols = line.split(",").map { it.trim() }
                         if (cols.size >= 2) {
-                            val contact = Contact(fullName = cols[0], email = cols[1], phone = if(cols.size > 2) cols[2] else "")
-                            db.contactDao().insertContact(contact)
-                            imported++
+                            contactsToInsert.add(Contact(fullName = cols[0], email = cols[1], phone = if(cols.size > 2) cols[2] else ""))
                         }
                     }
                 }
-                showImportResult(imported, "CSV")
+                if (contactsToInsert.isNotEmpty()) {
+                    db.contactDao().insertContacts(contactsToInsert)
+                }
+                showImportResult(contactsToInsert.size, "CSV")
             } catch (e: Exception) { showImportError() }
         }
     }
 
     private fun importFromExcel(uri: Uri) {
         lifecycleScope.launch(Dispatchers.IO) {
-            var imported = 0
+            val contactsToInsert = mutableListOf<Contact>()
             val formatter = DataFormatter()
             try {
                 contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -368,13 +400,15 @@ class ContactsActivity : AppCompatActivity() {
                         val phone = formatter.formatCellValue(row.getCell(2)).trim()
                         
                         if (name.isNotBlank() && email.isNotBlank()) {
-                            db.contactDao().insertContact(Contact(fullName = name, email = email, phone = phone))
-                            imported++
+                            contactsToInsert.add(Contact(fullName = name, email = email, phone = phone))
                         }
+                    }
+                    if (contactsToInsert.isNotEmpty()) {
+                        db.contactDao().insertContacts(contactsToInsert)
                     }
                     workbook.close()
                 }
-                showImportResult(imported, "Excel")
+                showImportResult(contactsToInsert.size, "Excel")
             } catch (e: Exception) { 
                 Log.e("ImportExcel", "Error: ${e.message}", e)
                 showImportError() 

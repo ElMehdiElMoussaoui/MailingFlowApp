@@ -34,6 +34,7 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var etPrice: TextInputEditText
     private lateinit var etDescription: TextInputEditText
     private lateinit var actvCategory: AutoCompleteTextView
+    private lateinit var actvCurrency: AutoCompleteTextView
     private lateinit var ivProductImage: ImageView
     private lateinit var btnUploadImage: android.widget.LinearLayout
     private lateinit var btnSave: MaterialButton
@@ -63,6 +64,7 @@ class AddProductActivity : AppCompatActivity() {
         bindViews()
         setupToolbar()
         setupCategoryDropdown()
+        setupCurrencyDropdown()
         setupImageUpload()
         setupSaveButton()
         prefillIfEditing()
@@ -75,6 +77,7 @@ class AddProductActivity : AppCompatActivity() {
         etPrice       = findViewById(R.id.etPrice)
         etDescription = findViewById(R.id.etDescription)
         actvCategory  = findViewById(R.id.actvCategory)
+        actvCurrency  = findViewById(R.id.actvCurrency)
         ivProductImage = findViewById(R.id.ivProductImage)
         btnUploadImage = findViewById(R.id.btnUploadImage)
         btnSave        = findViewById(R.id.btnSave)
@@ -94,6 +97,20 @@ class AddProductActivity : AppCompatActivity() {
         actvCategory.setOnClickListener { actvCategory.showDropDown() }
     }
 
+    private fun setupCurrencyDropdown() {
+        val currencies = CurrencyType.all
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, currencies)
+        actvCurrency.setAdapter(adapter)
+        actvCurrency.threshold = 0
+        
+        // Set default currency if not editing
+        if (editingProduct == null) {
+            actvCurrency.setText(currencies[0], false)
+        }
+        
+        actvCurrency.setOnClickListener { actvCurrency.showDropDown() }
+    }
+
     private fun setupImageUpload() {
         btnUploadImage.setOnClickListener {
             imagePicker.launch("image/*")
@@ -105,7 +122,6 @@ class AddProductActivity : AppCompatActivity() {
         editingProduct?.let { p ->
             etName.setText(p.name)
             
-            // Format price robustly for editing
             val priceText = if (p.price % 1.0 == 0.0) {
                 p.price.toInt().toString()
             } else {
@@ -113,6 +129,7 @@ class AddProductActivity : AppCompatActivity() {
             }
             etPrice.setText(priceText)
             
+            actvCurrency.setText(p.currency, false)
             etDescription.setText(p.description)
             actvCategory.setText(p.category, false)
             if (!p.imageUri.isNullOrEmpty()) {
@@ -134,10 +151,10 @@ class AddProductActivity : AppCompatActivity() {
     private fun saveProduct() {
         val name     = etName.text?.toString()?.trim() ?: ""
         var priceStr = etPrice.text?.toString()?.trim() ?: ""
+        val currency = actvCurrency.text?.toString()?.trim() ?: "MAD"
         val desc     = etDescription.text?.toString()?.trim() ?: ""
         val category = actvCategory.text?.toString()?.trim() ?: ""
 
-        // Handle comma as decimal separator
         priceStr = priceStr.replace(",", ".")
 
         var valid = true
@@ -169,6 +186,7 @@ class AddProductActivity : AppCompatActivity() {
             name        = name,
             category    = category,
             price       = price!!,
+            currency    = currency,
             description = desc,
             imageUri    = selectedImageUri?.toString() ?: editingProduct?.imageUri
         )

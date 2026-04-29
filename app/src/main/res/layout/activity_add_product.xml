@@ -132,32 +132,67 @@
 
                     <View android:layout_width="match_parent" android:layout_height="16dp" />
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="@string/label_retail_price" android:textSize="13sp"
-                        android:textColor="#444444" android:textStyle="bold"
-                        android:layout_marginBottom="6dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutPrice"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:boxCornerRadiusTopStart="10dp" app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp" app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxStrokeColor="#E0E0E0" app:hintEnabled="false"
-                        app:prefixText="MAD "
-                        app:prefixTextColor="#444444"
-                        app:startIconDrawable="@drawable/ic_money"
-                        app:startIconTint="#999999"> <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:hint="@string/hint_price"
-                        android:textSize="14sp"
-                        android:inputType="numberDecimal"
-                        android:imeOptions="actionNext" />
+                        android:orientation="horizontal">
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="@string/label_retail_price" android:textSize="13sp"
+                                android:textColor="#444444" android:textStyle="bold"
+                                android:layout_marginBottom="6dp" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/layoutPrice"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxCornerRadiusTopStart="10dp" app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp" app:boxCornerRadiusBottomEnd="10dp"
+                                app:boxStrokeColor="#E0E0E0" app:hintEnabled="false"
+                                app:startIconDrawable="@drawable/ic_money"
+                                app:startIconTint="#999999"> <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPrice"
+                                android:layout_width="match_parent"
+                                android:layout_height="52dp"
+                                android:hint="@string/hint_price"
+                                android:textSize="14sp"
+                                android:inputType="numberDecimal"
+                                android:imeOptions="actionNext" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Devise" android:textSize="13sp"
+                                android:textColor="#444444" android:textStyle="bold"
+                                android:layout_marginBottom="6dp" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxCornerRadiusTopStart="10dp" app:boxCornerRadiusTopEnd="10dp"
+                                app:boxCornerRadiusBottomStart="10dp" app:boxCornerRadiusBottomEnd="10dp"
+                                app:boxStrokeColor="#E0E0E0" app:hintEnabled="false">
+                                <AutoCompleteTextView
+                                    android:id="@+id/actvCurrency"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="52dp"
+                                    android:textSize="14sp"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

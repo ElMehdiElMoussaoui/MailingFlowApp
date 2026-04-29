@@ -8,6 +8,8 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmailing.R
 
@@ -16,52 +18,47 @@ class ContactsAdapter(
     private val onDeleteClick: (Contact) -> Unit,
     private val onEditClick: (Contact) -> Unit,
     private val onSelectionChanged: (Int) -> Unit
-) : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
+) : ListAdapter<Contact, ContactsAdapter.ContactViewHolder>(ContactDiffCallback()) {
 
-    private var filteredContacts = listOf<Contact>()
     private var isSelectionMode = false
     private val selectedContactIds = mutableSetOf<Int>()
 
-    fun filter(all: List<Contact>, query: String, emailF: EmailStatus?, sendF: SendingStatus?) {
-        filteredContacts = all.filter { c ->
-            val matchQuery = query.isBlank() || 
-                    c.fullName.contains(query, true) || 
-                    c.email.contains(query, true)
-            
-            val matchEmail = emailF == null || c.emailStatus == emailF
-            val matchSend  = sendF == null || c.sendingStatus == sendF
-            
-            matchQuery && matchEmail && matchSend
-        }
-        notifyDataSetChanged()
+    companion object {
+        private const val PAYLOAD_SELECTION = "PAYLOAD_SELECTION"
+        private const val PAYLOAD_SELECTION_MODE = "PAYLOAD_SELECTION_MODE"
     }
 
     fun setSelectionMode(enabled: Boolean) {
+        if (isSelectionMode == enabled) return
         isSelectionMode = enabled
         if (!enabled) selectedContactIds.clear()
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_SELECTION_MODE)
+        onSelectionChanged(selectedContactIds.size)
     }
 
-    fun toggleSelection(contactId: Int) {
+    fun toggleSelection(contactId: Int, position: Int) {
         if (selectedContactIds.contains(contactId)) {
             selectedContactIds.remove(contactId)
         } else {
             selectedContactIds.add(contactId)
         }
-        notifyDataSetChanged()
+        notifyItemChanged(position, PAYLOAD_SELECTION)
         onSelectionChanged(selectedContactIds.size)
     }
 
     fun selectAll() {
         selectedContactIds.clear()
-        selectedContactIds.addAll(filteredContacts.map { it.id })
-        notifyDataSetChanged()
+        for (contact in currentList) {
+            selectedContactIds.add(contact.id)
+        }
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_SELECTION)
         onSelectionChanged(selectedContactIds.size)
     }
 
     fun clearSelection() {
+        if (selectedContactIds.isEmpty()) return
         selectedContactIds.clear()
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount, PAYLOAD_SELECTION)
         onSelectionChanged(0)
     }
 
@@ -72,8 +69,23 @@ class ContactsAdapter(
         return ContactViewHolder(view)
     }
 
+    override fun onBindViewHolder(holder: ContactViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.isNotEmpty()) {
+            val contact = getItem(position)
+            if (payloads.contains(PAYLOAD_SELECTION_MODE)) {
+                holder.cbSelect.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
+                holder.layoutActions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
+                holder.cbSelect.isChecked = selectedContactIds.contains(contact.id)
+            } else if (payloads.contains(PAYLOAD_SELECTION)) {
+                holder.cbSelect.isChecked = selectedContactIds.contains(contact.id)
+            }
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
+    }
+
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        val contact = filteredContacts[position]
+        val contact = getItem(position)
         val context = holder.itemView.context
 
         holder.tvName.text = contact.fullName
@@ -81,11 +93,14 @@ class ContactsAdapter(
         holder.tvPhone.text = contact.phone
         holder.tvPhone.visibility = if (contact.phone.isNotBlank()) View.VISIBLE else View.GONE
 
-        val parts = contact.fullName.trim().split(" ")
-        holder.tvInitials.text = when {
-            parts.size >= 2 -> "${parts[0].first()}${parts[1].first()}".uppercase()
-            parts.isNotEmpty() -> parts[0].take(2).uppercase()
-            else -> "?"
+        // Fast initials extraction
+        val firstSpace = contact.fullName.indexOf(' ')
+        holder.tvInitials.text = if (firstSpace != -1) {
+            val first = contact.fullName.getOrNull(0)?.toString() ?: ""
+            val second = contact.fullName.getOrNull(firstSpace + 1)?.toString() ?: ""
+            (first + second).uppercase()
+        } else {
+            contact.fullName.take(2).uppercase()
         }
 
         if (contact.emailStatus == EmailStatus.CONFORME) {
@@ -111,14 +126,13 @@ class ContactsAdapter(
             }
         }
 
-        // Selection Logic
         holder.cbSelect.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
         holder.layoutActions.visibility = if (isSelectionMode) View.GONE else View.VISIBLE
         holder.cbSelect.isChecked = selectedContactIds.contains(contact.id)
 
         holder.itemView.setOnClickListener {
             if (isSelectionMode) {
-                toggleSelection(contact.id)
+                toggleSelection(contact.id, holder.bindingAdapterPosition)
             } else {
                 onContactClick(contact)
             }
@@ -127,20 +141,18 @@ class ContactsAdapter(
         holder.itemView.setOnLongClickListener {
             if (!isSelectionMode) {
                 setSelectionMode(true)
-                toggleSelection(contact.id)
+                toggleSelection(contact.id, holder.bindingAdapterPosition)
                 true
             } else false
         }
 
         holder.cbSelect.setOnClickListener {
-            toggleSelection(contact.id)
+            toggleSelection(contact.id, holder.bindingAdapterPosition)
         }
 
         holder.btnEdit.setOnClickListener { onEditClick(contact) }
         holder.btnDelete.setOnClickListener { onDeleteClick(contact) }
     }
-
-    override fun getItemCount() = filteredContacts.size
 
     class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvInitials: TextView = view.findViewById(R.id.tvInitials)
@@ -153,5 +165,10 @@ class ContactsAdapter(
         val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
         val cbSelect: CheckBox = view.findViewById(R.id.cbSelect)
         val layoutActions: View = view.findViewById(R.id.layoutActions)
+    }
+
+    class ContactDiffCallback : DiffUtil.ItemCallback<Contact>() {
+        override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean = oldItem == newItem
     }
 }

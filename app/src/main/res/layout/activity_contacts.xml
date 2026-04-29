@@ -14,7 +14,7 @@
         android:fitsSystemWindows="true"
         app:elevation="3dp">
 
-        <!-- Selection Toolbar (Initially hidden) -->
+        <!-- Selection Toolbar -->
         <LinearLayout
             android:id="@+id/toolbarSelection"
             android:layout_width="match_parent"
@@ -25,7 +25,6 @@
             android:paddingEnd="8dp"
             android:background="@color/blue_primary"
             android:visibility="gone">
-
             <ImageButton
                 android:id="@+id/btnCancelSelection"
                 android:layout_width="40dp"
@@ -33,7 +32,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close"
                 app:tint="#FFFFFF" />
-
             <TextView
                 android:id="@+id/tvSelectionCount"
                 android:layout_width="0dp"
@@ -44,7 +42,6 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
             <CheckBox
                 android:id="@+id/cbSelectAll"
                 android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
                 android:text="All"
                 android:textColor="#FFFFFF"
                 android:layout_marginEnd="8dp"/>
-
             <ImageButton
                 android:id="@+id/btnDeleteSelected"
                 android:layout_width="40dp"
@@ -63,6 +59,7 @@
                 app:tint="#FFFFFF" />
         </LinearLayout>
 
+        <!-- Normal Toolbar -->
         <LinearLayout
             android:id="@+id/toolbarNormal"
             android:layout_width="match_parent"
@@ -71,14 +68,12 @@
             android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="8dp">
-
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_back"
                 app:tint="#333333" />
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -88,35 +83,34 @@
                 android:textColor="#1A1A2E"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
             <ImageButton
                 android:id="@+id/btnImport"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:padding="8dp"
+                android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Import"
                 android:src="@drawable/ic_upload"
                 app:tint="#555555" />
-
             <ImageButton
                 android:id="@+id/btnSearch"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:padding="8dp"
+                android:scaleType="centerInside"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Rechercher"
                 android:src="@drawable/ic_search"
                 app:tint="#555555" />
-
             <ImageButton
                 android:id="@+id/btnFilter"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Filtrer"
                 android:src="@drawable/ic_filter"
                 app:tint="#555555" />
         </LinearLayout>
 
+        <!-- Search Toolbar -->
         <LinearLayout
             android:id="@+id/toolbarSearch"
             android:layout_width="match_parent"
@@ -127,7 +121,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:visibility="gone">
-
             <ImageButton
                 android:id="@+id/btnSearchClose"
                 android:layout_width="40dp"
@@ -135,7 +128,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_back"
                 app:tint="#555555" />
-
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -149,7 +141,6 @@
                 app:boxStrokeColor="#E0E0E0"
                 app:hintEnabled="false"
                 app:startIconDrawable="@drawable/ic_search">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSearch"
                     android:layout_width="match_parent"
@@ -161,7 +152,6 @@
                     android:singleLine="true"
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
             <ImageButton
                 android:id="@+id/btnSearchClear"
                 android:layout_width="36dp"
@@ -172,6 +162,7 @@
                 app:tint="#AAAAAA" />
         </LinearLayout>
 
+        <!-- Filter Panel -->
         <LinearLayout
             android:id="@+id/panelFilters"
             android:layout_width="match_parent"
@@ -182,107 +173,38 @@
             android:paddingEnd="16dp"
             android:paddingBottom="12dp"
             android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="10dp"
-                android:background="#F0F0F0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:letterSpacing="0.08"
-                android:text="EMAIL STATUS"
-                android:textColor="#999999"
-                android:textSize="11sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnConforme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:backgroundTint="#2979FF"
-                    android:text="Conforme"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    app:cornerRadius="17dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNonConforme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="#E8EAF6"
-                    android:text="Non Conforme"
-                    android:textColor="#555555"
-                    android:textSize="12sp"
-                    app:cornerRadius="17dp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:letterSpacing="0.08"
-                android:text="SENDING STATUS"
-                android:textColor="#999999"
-                android:textSize="11sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEnvoye"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:backgroundTint="#2979FF"
-                    android:text="Envoyé"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    app:cornerRadius="17dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNonEnvoye"
-                    android:layout_width="wrap_content"
-                    android:layout_height="34dp"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="#E8EAF6"
-                    android:text="Non Envoyé"
-                    android:textColor="#555555"
-                    android:textSize="12sp"
-                    app:cornerRadius="17dp" />
-            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginBottom="10dp" android:background="#F0F0F0" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:letterSpacing="0.08" android:text="@string/label_email_status" android:textColor="#999999" android:textSize="11sp" />
+            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none" android:layout_marginBottom="12dp">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnConforme" android:layout_width="wrap_content" android:layout_height="34dp" android:text="@string/btn_conforme" android:textSize="12sp" app:cornerRadius="17dp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnNonConforme" android:layout_width="wrap_content" android:layout_height="34dp" android:layout_marginStart="8dp" android:text="@string/btn_non_conforme" android:textSize="12sp" app:cornerRadius="17dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8dp" android:letterSpacing="0.08" android:text="@string/label_sending_status" android:textColor="#999999" android:textSize="11sp" />
+            <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnEnvoye" android:layout_width="wrap_content" android:layout_height="34dp" android:text="@string/btn_envoye" android:textSize="12sp" app:cornerRadius="17dp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnNonEnvoye" android:layout_width="wrap_content" android:layout_height="34dp" android:layout_marginStart="8dp" android:text="@string/btn_non_envoye" android:textSize="12sp" app:cornerRadius="17dp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnEchoue" android:layout_width="wrap_content" android:layout_height="34dp" android:layout_marginStart="8dp" android:text="@string/btn_echoue" android:textSize="12sp" app:cornerRadius="17dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
+        <!-- Header Information (Now inside AppBar to scroll away) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="#FFFFFF"
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal">
-
                 <TextView
                     android:id="@+id/tvContactCount"
                     android:layout_width="0dp"
@@ -292,13 +214,12 @@
                     android:textColor="#777777"
                     android:textSize="12sp"
                     android:textStyle="bold" />
-
                 <TextView
                     android:id="@+id/tvSortByName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="4dp"
-                    android:text="Sort by Name"
+                    android:text="@string/sort_by_name"
                     android:textColor="#2979FF"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -306,84 +227,37 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:background="@drawable/bg_warning_red"
                 android:gravity="center"
-                android:padding="14dp"
-                android:text="🚨 IMPORTANT:\nColumn A = Name\nColumn B = Email\nColumn C = Phone"
+                android:padding="10dp"
+                android:text="@string/import_hint_columns"
                 android:textColor="#B71C1C"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
-            <!-- Information message, hidden when showing contacts -->
             <LinearLayout
                 android:id="@+id/layoutInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="20dp"
+                android:padding="12dp"
                 android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="#2979FF" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Expand your reach"
-                    android:textColor="#1A1A2E"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="Organize your audience and grow your email marketing reach with targeted campaigns."
-                    android:textColor="#888888"
-                    android:textSize="13sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnImportContacts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="12dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Import Contacts"
-                    android:textColor="#2979FF"
-                    android:textSize="13sp"
-                    app:cornerRadius="20dp"
-                    app:strokeColor="#2979FF"
-                    app:strokeWidth="1dp" />
+                <ImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_person" app:tint="#2979FF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/expand_title" android:textColor="#1A1A2E" android:textSize="14sp" android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnImportContacts" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginTop="8dp" android:backgroundTint="#FFFFFF" android:text="@string/btn_import_contacts" android:textColor="#2979FF" android:textSize="12sp" app:cornerRadius="18dp" app:strokeColor="#2979FF" app:strokeWidth="1dp" />
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewContacts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardExpand"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="#EEF2FF"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#D0D8FF"
-                app:strokeWidth="1dp"></com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main List (Directly in CoordinatorLayout for recycling) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewContacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddContact"
