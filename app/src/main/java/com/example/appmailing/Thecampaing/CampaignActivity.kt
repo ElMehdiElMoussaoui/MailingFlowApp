@@ -165,22 +165,18 @@ class CampaignActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     startActivity(Intent(this, HomeScreen::class.java))
-                    finish()
                     true
                 }
                 R.id.nav_stats -> {
                     startActivity(Intent(this, StatistiqueActivity::class.java))
-                    finish()
                     true
                 }
                 R.id.nav_contacts -> {
                     startActivity(Intent(this, ContactsActivity::class.java))
-                    finish()
                     true
                 }
                 R.id.nav_products -> {
                     startActivity(Intent(this, ProductsActivity::class.java))
-                    finish()
                     true
                 }
                 R.id.nav_campaigns -> true

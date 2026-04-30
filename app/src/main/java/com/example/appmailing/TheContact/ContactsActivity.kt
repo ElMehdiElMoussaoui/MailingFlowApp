@@ -484,28 +484,24 @@ class ContactsActivity : AppCompatActivity() {
 
                 R.id.nav_home -> {
                     startActivity(Intent(this, HomeScreen::class.java))
-                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_campaigns -> {
                     startActivity(Intent(this, CampaignActivity::class.java))
-                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_stats -> {
                     startActivity(Intent(this, StatistiqueActivity::class.java))
-                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
 
                 R.id.nav_products -> {
                     startActivity(Intent(this, ProductsActivity::class.java))
-                    finish()
                     overridePendingTransition(0, 0)
                     true
                 }
